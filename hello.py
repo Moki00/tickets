@@ -1,14 +1,14 @@
 
-import secrets
+# import secrets
 from flask import Flask, make_response, redirect, render_template, request, session, url_for
 from markupsafe import escape
+# import werkzeug
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-
 # Set the secret key to some random bytes. Keep this really secret!
-# app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 # app.secret_key = secrets.token_hex(32)
 
 # @app.route("/")
@@ -141,15 +141,22 @@ app = Flask(__name__)
 #         file.save(f"/var/www/uploads/{secure_filename(file.filename)}")
 #     ...
 
-@app.errorhandler(404)
-def not_found(error):
-    return render_template('error.html'), 404
-
 # @app.errorhandler(404)
 # def not_found(error):
-#     resp = make_response(render_template('error.html'), 404)
-#     resp.headers['X-Something'] = 'A value'
-#     return resp
+#     return render_template('error.html'), 404
+
+@app.errorhandler(404)
+def not_found(error):
+    resp = make_response(render_template('error.html'), 404)
+    resp.headers['X-Something'] = 'A value'
+    app.logger.debug('A value for debugging')
+    app.logger.warning('A warning occurred (%d apples)', 42)
+    app.logger.error('An error occurred')
+    return resp
+
+@app.errorhandler(werkzeug.exceptions.BadRequest)
+def handle_bad_request(e):
+    return 'bad request!', 400
 
 # @app.route("/me")
 # def me_api():
@@ -185,7 +192,9 @@ def login():
 
 @app.route('/logout')
 def logout():
-    # remove the username from the session if it's there
     session.pop('username', None)
     return redirect(url_for('index'))
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
 

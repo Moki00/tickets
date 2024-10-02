@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Radio Team</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename= 'css/style.css') }}"
+    />
+  </head>
+  <body>
+    {% extends 'base.html' %} {% block content %}
+    <h1>{% block title %} Welcome to Radio Tickets {% endblock %}</h1>
+    <!-- Jinja to iterate over each post in the list. -->
+    {% for post in posts %}
+    <a href="{{ url_for('post', post_id=post['id']) }}">
+      <h2>{{ ticket['serial_id'] }}</h2>
+    </a>
+    <span class="badge badge-primary">{{ ticket['created'] }}</span>
+    <a href="{{ url_for('edit', id=post['id']) }}">
+      <span class="badge badge-warning">Edit</span>
+    </a>
+    <hr />
+    {% endfor %} {% endblock %}
+    <p>text should not be seen here</p>
+  </body>
+</html>
